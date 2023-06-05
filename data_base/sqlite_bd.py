@@ -1,5 +1,24 @@
 import sqlite3 as sq
 
+global pg, res, categor
+
+res = dict()
+pg = 0
+categor = None
+
+
+def append_pg(N):
+    global pg
+    pg = pg + N
+    return pg
+
+def append_categor():
+    global categor
+    return categor
+
+def append_res():
+    global res
+    return res
 
 def sql_start():
     global base, cur
@@ -8,10 +27,26 @@ def sql_start():
     if base:
         print('База запущена')
 
-    base.execute('CREATE TABLE IF NOT EXISTS menu(img TEXT, name TEXT PRIMARY KEY,'
+    base.execute('CREATE TABLE IF NOT EXISTS menu(category TEXT, img TEXT, name TEXT PRIMARY KEY,'
                  'description TEXT, price TEXT)')
 
 async def sql_add_command(state):
+    print(state)
+    cur.execute('INSERT INTO menu VALUES(?, ?, ?, ?, ?)', (state['category'],
+                                                            state['photos'],
+                                                            state['name'],
+                                                            state['description'],
+                                                            state['price']))
+    base.commit()
 
-    cur.execute('INSERT INTO menu VALUES (?, ?, ?, ?)', tuple(state.values()))
+
+async def sql_read(cat):
+    global res, categor
+    categor = cat
+    res = cur.execute('SELECT * FROM menu WHERE category == ?', (cat, )).fetchall()
+    return res
+
+
+async def delete_sql(data):
+    cur.execute('DELETE FROM menu WHERE name == ?', (data, ))
     base.commit()
