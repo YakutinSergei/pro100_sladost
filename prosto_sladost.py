@@ -20,14 +20,8 @@ async def main():
     # Выводим в консоль информацию о начале запуска бота
     logger.info('Starting bot')
 
-    #Подключение к базе данных
-    sqlite_bd.sql_start()
-    sqlite_bd.sql_users()
-
     # Регистриуем роутеры в диспетчере
-
-
-
+    sqlite_bd.sql_start()
 
     dp.include_router(admin_handlers.router)
     dp.include_router(order_handler.router)
