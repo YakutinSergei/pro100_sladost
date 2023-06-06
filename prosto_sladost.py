@@ -22,6 +22,7 @@ async def main():
 
     #Подключение к базе данных
     sqlite_bd.sql_start()
+    sqlite_bd.sql_users()
 
     # Регистриуем роутеры в диспетчере
 

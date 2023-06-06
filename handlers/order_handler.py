@@ -14,12 +14,14 @@ from data_base.sqlite_bd import append_pg, append_res
 
 router: Router = Router()
 
+
+# переделать в машинное состояние
 mediagroups = {}
 day = str(datetime.now().day)
 mouth = str(datetime.now().month)
 year = str(datetime.now().year)
 order_product = []
-new_album = []
+new_album = [] #Альбом фотографий
 
 #Машиносостояние
 class FSMorder(StatesGroup):
@@ -184,7 +186,6 @@ async def order_delivery_process(message: Message, state: FSMContext):
                                                    f'Контактный телефон: {order_product["name_user"]}\n'
                                                    f'Дата заказа: {order_product["data_order"]}\n'
                                                    f'Количество: {order_product["quantity"]}\n'
-                                                   f'Декор: {order_product["decor"]}\n'
                                                    f'Способ доставки: {order_product["delivery"]}\n')
     else:
         global new_album

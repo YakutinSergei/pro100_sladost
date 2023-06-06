@@ -80,7 +80,7 @@ async def back_category_command(callback: CallbackQuery):
 @router.callback_query()
 async def print_user_categoryes_cammand(callback: CallbackQuery):
     res = await sql_read('btn_admin_'+callback.data)
-    pg = append_pg(0)
+    pg = 0
     len_pg = len(res)
     if len_pg > 0:
         await bot.send_photo(chat_id=callback.from_user.id, photo=res[pg][1],
