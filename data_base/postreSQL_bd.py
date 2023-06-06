@@ -4,27 +4,28 @@ from environs import Env
 env = Env()
 env.read_env()
 
-
-
-try:
-    connection = psycopg2.connect(
-        host=env('host'),
-        user=env('user'),
-        password=env('password'),
-        database=env('db_name')
-    )
-
-    #cursor
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT version();'
+# host = "127.0.0.1"
+# user = "postgres"
+# password = "Ex-531966"
+# db_name = "prosto_sladost"
+def postreSQL_connect():
+    try:
+        connect = psycopg2.connect(
+            host=env('host'),
+            user=env('user'),
+            password=env('password'),
+            database=env('db_name')
         )
-        print(f'Server version: {cursor.fechone()}')
-except Exception as _ex:
-    print('[INFO] Error ', _ex)
+        #cursor
+        with connect.cursor() as cursor:
+            cursor.execute(
+                'SELECT version();'
+            )
+            print(f'Server version: {cursor.fetchall()}')
+    except psycopg2.Error as _ex:
+        print('[INFO] Error ', _ex)
 
-finally:
-    global connection
-    if connection:
-        connection.close()
-        print('[INFO] PostgresSQL closed')
+    finally:
+        if connect:
+            connect.close()
+            print('[INFO] PostgresSQL closed')

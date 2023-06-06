@@ -4,6 +4,7 @@ import logging
 from handlers import other_handlers, user_handlers, admin_handlers, order_handler
 from create_bot import bot, dp
 from data_base import sqlite_bd
+from data_base import postreSQL_bd
 
 # Инициализируем логгер
 logger = logging.getLogger(__name__)
@@ -21,7 +22,8 @@ async def main():
     logger.info('Starting bot')
 
     # Регистриуем роутеры в диспетчере
-    sqlite_bd.sql_start()
+    #sqlite_bd.sql_start()
+    postreSQL_bd.postreSQL_connect()
 
     dp.include_router(admin_handlers.router)
     dp.include_router(order_handler.router)
