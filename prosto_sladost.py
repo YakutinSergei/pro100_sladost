@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from handlers import other_handlers, user_handlers, admin_handlers
+from handlers import other_handlers, user_handlers, admin_handlers, order_handler
 from create_bot import bot, dp
 from data_base import sqlite_bd
 
@@ -22,9 +22,15 @@ async def main():
 
     #Подключение к базе данных
     sqlite_bd.sql_start()
+    sqlite_bd.sql_users()
 
     # Регистриуем роутеры в диспетчере
+
+
+
+
     dp.include_router(admin_handlers.router)
+    dp.include_router(order_handler.router)
     dp.include_router(user_handlers.router)
     dp.include_router(other_handlers.router)
 
