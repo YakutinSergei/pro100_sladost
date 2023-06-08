@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from keyboards.keyboards import  order_kb, order_select_kb, create_pagination_keyboard
 from lexicon.lexicon_ru import LEXICON_RU
 from create_bot import bot
-from data_base.sqlite_bd import sql_read, append_categor, append_res, append_pg
+from data_base.postreSQL_bd import postreSQL_read, postreSQL_up, postreSQL_pg_up, postreSQL_user_read
 
 router: Router = Router()
 
@@ -36,37 +36,39 @@ async def process_yes_answer(message: Message):
 
 @router.callback_query(Text(text='forward'))
 async def process_forward_press(callback: CallbackQuery):
-    pg = append_pg(0)
-    res = append_res()
+    user_up = postreSQL_user_read(callback.from_user.id)
+    res = postreSQL_read(user_up[0][2])
+
     len_pg = len(res)
-    print(res)
-    if pg+1 < len_pg:
-        pg = append_pg(+1)
+    if int(user_up[0][3])+1 < len_pg:
+        pg = postreSQL_pg_up(callback.from_user.id, 1)
         await bot.edit_message_media(
                                     chat_id=callback.message.chat.id,
                                     message_id=callback.message.message_id,
-                                    media=InputMediaPhoto(media=res[pg][1],
-                                                                caption=f'{res[pg][2]}\nОписание: {res[pg][3]}\n Цена:{res[pg][-1]}'),
+                                    media=InputMediaPhoto(media=res[pg][2],
+                                                                caption=f'{res[pg][3]}\nОписание: {res[pg][4]}\n Цена:{res[pg][-1]}'),
                                    reply_markup=create_pagination_keyboard('backward',
                                      f'{pg+1}/{len_pg}',
                                     'forward'))
+
     await callback.answer()
 @router.callback_query(Text(text='backward'))
 async def process_forward_press(callback: CallbackQuery):
-    pg = append_pg(0)
-    res = append_res()
+    user_up = postreSQL_user_read(callback.from_user.id)
+    res = postreSQL_read(user_up[0][2])
     len_pg = len(res)
-    if pg > 0:
-        pg = append_pg(-1)
+    if int(user_up[0][3]) > 0:
+        pg = postreSQL_pg_up(callback.from_user.id, -1)
         if pg < len_pg:
             await bot.edit_message_media(
                                     chat_id=callback.message.chat.id,
                                     message_id=callback.message.message_id,
-                                            media=InputMediaPhoto(media=res[pg][1],
-                                                                    caption=f'{res[pg][2]}\nОписание: {res[pg][3]}\n Цена:{res[pg][-1]}'),
+                                            media=InputMediaPhoto(media=res[pg][2],
+                                                                    caption=f'{res[pg][3]}\nОписание: {res[pg][4]}\n Цена:{res[pg][-1]}'),
                                            reply_markup=create_pagination_keyboard('backward',
                                              f'{pg+1}/{len_pg}',
                                             'forward'))
+
     await callback.answer()
 
 
@@ -79,12 +81,13 @@ async def back_category_command(callback: CallbackQuery):
 
 @router.callback_query()
 async def print_user_categoryes_cammand(callback: CallbackQuery):
-    res = await sql_read('btn_admin_'+callback.data)
-    pg = append_pg(None)
+    res = postreSQL_read('btn_admin_'+callback.data)
+    pg = 0
+    users_up = postreSQL_up(callback.from_user.id, pg, 'btn_admin_'+callback.data)
     len_pg = len(res)
     if len_pg > 0:
-        await bot.send_photo(chat_id=callback.from_user.id, photo=res[pg][1],
-                             caption=f'{res[pg][2]}\nОписание: {res[pg][3]}\n Цена:{res[pg][-1]}',
+        await bot.send_photo(chat_id=callback.from_user.id, photo=res[pg][2],
+                             caption=f'{res[pg][3]}\nОписание: {res[pg][4]}\n Цена:{res[pg][-1]}',
                              reply_markup=create_pagination_keyboard('backward',
                                                                            f'{pg + 1}/{len_pg}',
                                                                            'forward'))

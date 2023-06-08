@@ -40,8 +40,6 @@ class FSMorder(StatesGroup):
 async def order_add_command(callback: CallbackQuery, state: FSMContext):
     pg = append_pg(0)
     res = append_res()
-    print(res)
-    print(pg)
     await state.update_data(category=str(res[pg][0]).split('_')[-1])
     await callback.message.answer(text='Как к Вам можно обращаться: ')
     await callback.answer()
@@ -165,7 +163,7 @@ async def warning_not_photo(message: Message, state: FSMContext):
                               'Самомывоз или доставка яндекс курьером')
     await state.set_state(FSMorder.delivery)
 
-#Завершение закаща
+#Завершение заказа
 @router.message(StateFilter(FSMorder.delivery))
 async def order_delivery_process(message: Message, state: FSMContext):
     await state.update_data(delivery=message.text)

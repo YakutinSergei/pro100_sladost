@@ -37,7 +37,7 @@ admin_kb: ReplyKeyboardMarkup = ReplyKeyboardMarkup(keyboard=[[btn_add],[btn_men
                                                     resize_keyboard=True)
 
 
-admin_add_product_kb = create_inline_kb(2, 'cakes', 'сupcakes', 'bento_cake', 'Cake_to_go')
+admin_add_product_kb = create_inline_kb(2, 'cakes', 'cupcakes', 'bento_cake', 'Cake_to_go')
 
 def admin_create_pagination_keyboard(*buttons: str) -> InlineKeyboardMarkup:
     # Инициализируем билдер
