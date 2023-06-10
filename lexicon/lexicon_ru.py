@@ -26,7 +26,9 @@ LEXICON_RU: dict[str, str] = {
     'menu':'меню',
     'menu_admin':'меню админа',
     'selecting_cat': 'Выбирите категорию',
-    'add_cake_kb': 'Торт'}
+    'add_cake_kb': 'Торт',
+    'method_delivery': 'Доставка',
+    'method_pickup': 'Самовывоз'}
 
 
 
@@ -50,3 +52,4 @@ calendar: dict[str, str] = {
     '10': ['октябрь', '31'],
     '11': ['ноябрь', '30'],
     '12': ['декабрь', '31']}
+
