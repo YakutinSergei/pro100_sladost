@@ -181,23 +181,23 @@ async def order_delivery_process(callback: CallbackQuery, state: FSMContext):
     order_product = await state.get_data()
     if isinstance(order_product['decor'], str):
         if len(order_product['decor']) < 15 or len(str(order_product['decor']).split(' ')) > 1:
-            await bot.send_message(654222332, text=f'Имя: {order_product["category"]}\n'
-                                                   f'Контактный телефон: {order_product["name_user"]}\n'
+            await bot.send_message(654222332, text=f'Имя: {order_product["name_user"]}\n'
+                                                   f'Контактный телефон: {order_product["telephon"]}\n'
                                                    f'Дата заказа: {order_product["data_order"]}\n'
                                                    f'Количество: {order_product["quantity"]}\n'
                                                    f'Декор: {order_product["decor"]}\n'
                                                    f'Способ доставки: {order_product["delivery"]}\n')
         else:
-            await bot.send_photo(654222332, photo= order_product["decor"], caption=f'Имя: {order_product["category"]}\n'
-                                                   f'Контактный телефон: {order_product["name_user"]}\n'
+            await bot.send_photo(654222332, photo= order_product["decor"], caption=f'Имя: {order_product["name_user"]}\n'
+                                                   f'Контактный телефон: {order_product["telephon"]}\n'
                                                    f'Дата заказа: {order_product["data_order"]}\n'
                                                    f'Количество: {order_product["quantity"]}\n'
                                                    f'Способ доставки: {order_product["delivery"]}\n')
     else:
         global new_album
         await bot.send_media_group(chat_id=f'{654222332}', media=new_album)
-        await bot.send_message(654222332, text=f'Имя: {order_product["category"]}\n'
-                                               f'Контактный телефон: {order_product["name_user"]}\n'
+        await bot.send_message(654222332, text=f'Имя: {order_product["name_user"]}\n'
+                                               f'Контактный телефон: {order_product["telephon"]}\n'
                                                f'Дата заказа: {order_product["data_order"]}\n'
                                                f'Количество: {order_product["quantity"]}\n'
                                                f'Способ доставки: {order_product["delivery"]}\n')

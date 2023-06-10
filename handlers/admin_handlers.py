@@ -7,7 +7,6 @@ from aiogram.filters import Command, Text
 from lexicon.lexicon_ru import LEXICON_RU
 from aiogram.fsm.storage.memory import MemoryStorage
 from create_bot import bot
-from data_base.sqlite_bd import delete_sql #!!!!!УДАЛИТЬ!!!!!!!!!!
 from data_base.postreSQL_bd import postres_add_command, postreSQL_read, postreSQL_user_read, postreSQL_pg_up, \
     postreSQL_up, postreSQL_del
 from keyboards.admin_kb import admin_kb, admin_add_product_kb, admin_create_pagination_keyboard
@@ -40,7 +39,16 @@ async def process_add_photo_command(message: Message, state: FSMContext):
     await message.answer(text=LEXICON_RU['selecting_cat'], reply_markup=admin_add_product_kb)
     await state.set_state(FSMAdmin.category)
 
+@router.message(Text(text='Отмена'), StateFilter(default_state))
+async def process_cancel_command(message: Message):
+    await message.answer(text='Вы и не начинали добавлять')
 
+
+@router.message(Text(text='Отмена'), ~StateFilter(default_state))
+async def process_cancel_command_state(message: Message, state: FSMContext):
+    await message.answer(text='Добавление отменено')
+    # Сбрасываем состояние и очищаем данные, полученные внутри состояний
+    await state.clear()
 
 @router.callback_query(StateFilter(FSMAdmin.category))
 async def add_cake_bd(calllback: CallbackQuery, state: FSMContext):
@@ -112,17 +120,6 @@ async def process_moderator_command(message: Message):
 
 # Этот хэндлер будет срабатывать на команду "/cancel" в состоянии
 # по умолчанию и сообщать, что эта команда работает внутри машины состояний
-@router.message(Command(commands=['cancel']), StateFilter(default_state))
-async def process_cancel_command(message: Message):
-    await message.answer(text='Отменять нечего. Вы не начинали оформление заказа')
-
-
-@router.message(Command(commands=['cancel']), ~StateFilter(default_state))
-async def process_cancel_command_state(message: Message, state: FSMContext):
-    await message.answer(text='Вы отказались от совершения заказа')
-    # Сбрасываем состояние и очищаем данные, полученные внутри состояний
-    await state.clear()
-
 
 @router.message(Text(text=LEXICON_RU['menu_admin']))
 async def procces_menu_command(message: Message):
